@@ -1,0 +1,24 @@
+services:
+  # API server service running on port 3333
+  api:
+    build:
+      context: ..
+      dockerfile: local-dev/Dockerfile.server
+    ports:
+      - '3333:3333'
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+
+  # Webapp client service running on port 4200
+  webapp:
+    build:
+      context: ..
+      dockerfile: local-dev/Dockerfile.client
+    ports:
+      - '4200:4200'
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+    restart: unless-stopped

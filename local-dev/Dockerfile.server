@@ -1,0 +1,24 @@
+# Docker configuration for the API server to ensure consistent Node.js environment
+FROM node:20.17-alpine
+
+WORKDIR /app
+
+# Copy package files for dependency installation
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig*.json ./
+
+# Install dependencies, using npm install to handle lock file discrepancies
+RUN npm install
+
+# Install nx globally for CLI access
+RUN npm install -g nx
+
+# Copy source code
+COPY . .
+
+# Expose the API port as specified in README
+EXPOSE 3333
+
+# Start the API server directly
+CMD ["nx", "serve", "api", "--host", "0.0.0.0"]

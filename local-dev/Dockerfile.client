@@ -1,0 +1,24 @@
+# Docker configuration for the webapp client to ensure consistent Node.js environment
+FROM node:20.17-alpine
+
+WORKDIR /app
+
+# Copy package files for dependency installation
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig*.json ./
+
+# Install dependencies, using npm install to handle lock file discrepancies
+RUN npm install
+
+# Install nx globally for CLI access
+RUN npm install -g nx
+
+# Copy source code
+COPY . .
+
+# Expose the webapp port as specified in README
+EXPOSE 4200
+
+# Start the webapp directly
+CMD ["nx", "serve", "webapp", "--host", "0.0.0.0"]
